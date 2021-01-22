@@ -54,7 +54,7 @@ function Layout() {
             <HomePage sampleStarships={appState.sampleStarships}/>
           }/>
            <Route exact path="/starships" render={props=> 
-            <IndexPage sampleStarships={appState.allStarships.results}/>
+            <IndexPage allStarships={appState.allStarships.results}/>
           }/>
         </Switch>
       <Footer/>
