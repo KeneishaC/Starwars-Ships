@@ -7,6 +7,7 @@ import Footer from './components/Footer'
 import styled from 'styled-components'
 
 import HomePage from './pages/HomePage'
+import IndexPage from './pages/IndexPage'
 
 import { fetchStarships } from './services/starwars-api'
 
@@ -51,6 +52,9 @@ function Layout() {
         <Switch>
           <Route exact path="/" render={props=> 
             <HomePage sampleStarships={appState.sampleStarships}/>
+          }/>
+           <Route exact path="/starships" render={props=> 
+            <IndexPage sampleStarships={appState.allStarships.results}/>
           }/>
         </Switch>
       <Footer/>
