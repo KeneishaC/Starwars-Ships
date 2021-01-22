@@ -29,12 +29,20 @@ function Layout() {
 
   const [appState, setAppState] = useState({
     sampleStarships: [],
-    allStarships: {}
+    allStarships: {
+      next: null,
+      previous: null,
+      results: [],
+      count: null
+    }
   });
 
   async function getAppData() {
     const data = await fetchStarships();
-    console.log(data);
+    setAppState({
+      allStarships: data,
+      sampleStarships: data.results.slice(0, 3)
+    })
   }
 
   return (
@@ -42,7 +50,7 @@ function Layout() {
       <Header/>
         <Switch>
           <Route exact path="/" render={props=> 
-            <HomePage/>
+            <HomePage sampleStarships={appState.sampleStarships}/>
           }/>
         </Switch>
       <Footer/>
