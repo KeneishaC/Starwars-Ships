@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import HomePage from './pages/HomePage'
 import IndexPage from './pages/IndexPage'
+import DetailPage from './pages/DetailPage';
 
 import { fetchStarships } from './services/starwars-api'
 import { auth } from './services/firebase'
@@ -79,6 +80,13 @@ function Layout() {
               prev={appState.allStarships.previous}
             />
            : <Redirect to='/'/>
+          }/>
+           <Route exact path="/starships/:id" render={props => 
+            userState.user 
+            ? <DetailPage 
+                  starship={appState.allStarships.results[props.match.params.id]}
+              />
+            : <Redirect to="/" />
           }/>
         </Switch>
       <Footer/>
