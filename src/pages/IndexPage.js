@@ -1,9 +1,30 @@
 import styled from 'styled-components';
 const StyledPage = styled.main`
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    section:first-child{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+    section:Last-of-type {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        button{
+            width: 75px;
+            border-radius: 7px;
+            margin: 0 10px;
+            padding: 10px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+    }
 `;
 const StyledStarshipCard = styled.article`
     display: flex;
@@ -18,13 +39,27 @@ const StyledStarshipCard = styled.article`
 export default function IndexPage(props) {
     return (
         <StyledPage>
-            {
-                props.allStarships.map(starship => 
-                    <StyledStarshipCard key={starship.name}>
-                        <h1>{starship.name}</h1>
-                    </StyledStarshipCard>    
-                )
-            }
+            <section>
+                {
+                    props.allStarships.map(starship => 
+                        <StyledStarshipCard key={starship.name}>
+                            <h1>{starship.name}</h1>
+                        </StyledStarshipCard>    
+                    )
+                }
+            </section>
+            <section>
+                {
+                    props.prev
+                    &&
+                    <button onClick={() => props.getNextOrPrev(props.prev)}> Previous</button>
+                }
+                {
+                    props.next
+                    &&
+                    <button onClick={() => props.getNextOrPrev(props.next)}> Next</button>
+                }
+            </section>
         </StyledPage>
     );
 };

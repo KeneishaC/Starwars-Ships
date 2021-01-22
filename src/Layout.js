@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { Switch, Route} from 'react-router-dom'
+import { Switch, Route, Redirect} from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 
@@ -10,6 +10,7 @@ import HomePage from './pages/HomePage'
 import IndexPage from './pages/IndexPage'
 
 import { fetchStarships } from './services/starwars-api'
+import { auth } from './services/firebase'
 
 const StyledLayout = styled.div`
   display: flex;
@@ -26,6 +27,10 @@ function Layout() {
 
   useEffect(()=> {
     getAppData();
+
+    const unsubscribe = auth.onAuthStateChanged(user => setUserState({ user }))
+
+    return () => unsubscribe();
   },[])
 
   const [appState, setAppState] = useState({
@@ -38,6 +43,11 @@ function Layout() {
     }
   });
 
+  const [ userState, setUserState] = useState({
+    user: null
+  });
+
+
   async function getAppData() {
     const data = await fetchStarships();
     setAppState({
@@ -45,16 +55,30 @@ function Layout() {
       sampleStarships: data.results.slice(0, 3)
     })
   }
+  async function getNextOrPrev(pageUrl) {
+    const data = await fetchStarships(pageUrl);
+    setAppState(prevState => ({
+      ...prevState,
+      allStarships: data
+    }))
+  }
 
   return (
     <StyledLayout>
-      <Header/>
+      <Header user={userState.user}/>
         <Switch>
           <Route exact path="/" render={props=> 
             <HomePage sampleStarships={appState.sampleStarships}/>
           }/>
            <Route exact path="/starships" render={props=> 
-            <IndexPage allStarships={appState.allStarships.results}/>
+           userState.user 
+           ? <IndexPage 
+              allStarships={appState.allStarships.results}
+              getNextOrPrev={getNextOrPrev}
+              next={appState.allStarships.next}
+              prev={appState.allStarships.previous}
+            />
+           : <Redirect to='/'/>
           }/>
         </Switch>
       <Footer/>
